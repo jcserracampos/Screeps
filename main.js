@@ -7,6 +7,11 @@ var roleBuilder = require('role.builder');
 
 module.exports.loop = function () {
 
+    // Move cost 50
+    // Carry cost 50
+    // Work cost 100
+    var bodyParties = [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
+
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
@@ -18,22 +23,15 @@ module.exports.loop = function () {
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
 
-    if(Game.spawns['Spawn1'].store.energy >= 300) {
+    if(Game.spawns['Spawn1'].spawnCreep(bodyParties, 'teste', {dryRun: true}) == OK) {
         if(harvesters.length < 4) {
             spawnCreep('harvester');
-        } else if(builders.length < 2) {
-            var newName = 'Builder' + Game.time;
-            console.log('Spawning: ' + newName)
-            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,CARRY,MOVE,MOVE], newName,
-                {memory: {role: 'builder'}});
+        } else if(builders.length < 5) {
+            spawnCreep('builder');
         } else if(upgraders.length < 5) {
-            var newName = 'Upgrader' + Game.time;
-            console.log('Spawning: ' + newName)
-            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], newName,
-                {memory: {role: 'upgrader'}});
+            spawnCreep('upgrader');
         } else {
-            Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], newName,
-                {memory: {role: 'harvester'}});
+            spawnCreep('upgrader');
         }
     }
 
@@ -83,8 +81,8 @@ module.exports.loop = function () {
 
     function spawnCreep(role) {
         var newName = role + Game.time;
-        console.log('Spawning: ' + newName)
-        Game.spawns['Spawn1'].spawnCreep([WORK,CARRY,MOVE,MOVE,MOVE], newName,
+            console.log('Spawning: ' + newName)
+        Game.spawns['Spawn1'].spawnCreep(bodyParties, newName,
             {memory: {role: role}});
     }
 }
