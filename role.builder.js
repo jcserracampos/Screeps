@@ -19,12 +19,38 @@ var roleBuilder = {
                     creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
                 }
             }
+            else {
+                const targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: object => object.hits < object.hitsMax
+                });
+
+                targets.sort((a,b) => a.hits - b.hits);
+
+                if(targets.length > 0) {
+                    if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(targets[0]);
+                        creep.say('🚧 Repair');
+                    }
+                }
+            }
         }
         else {
             var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
+            // var secondSource = new RoomPosition(34, 12, creep.room.name);
+            // var location = creep.room.lookAt(secondSource)
+            // haveCreep = location.filter(lookObject => {
+            //     lookObject.type == LOOK_CREEPS
+            // })
+
+            // if (haveCreep && creep.pos != secondSource) {
+            //     if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+            //         creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            //     }
+            // } else {
+                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+                }
+            // }
         }
     }
 };

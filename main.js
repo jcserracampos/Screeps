@@ -5,12 +5,20 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 
+// var spawnCreep = require('functions/spawnCreep');
+
 module.exports.loop = function () {
 
     // Move cost 50
     // Carry cost 50
     // Work cost 100
-    var bodyParties = [WORK,WORK,CARRY,CARRY,MOVE,MOVE,MOVE]
+    if(_.filter(Game.creeps).length <= 5) {
+        var bodyParties = [WORK,CARRY,MOVE]; // 200
+    } else if(_.filter(Game.creeps).length <= 8) {
+        var bodyParties = [WORK,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE]; // 400
+    } else {
+        var bodyParties = [WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE,MOVE,MOVE,MOVE]; // 600
+    }
 
     for(var name in Memory.creeps) {
         if(!Game.creeps[name]) {
@@ -18,20 +26,20 @@ module.exports.loop = function () {
             console.log('Clearing non-existing creep memory:', name);
         }
     }
-    
+
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
 
-    if(Game.spawns['Spawn1'].spawnCreep(bodyParties, 'teste', {dryRun: true}) == OK) {
-        if(harvesters.length < 4) {
+    if(Game.spawns['Spawn1'].spawnCreep(bodyParties, 'X', {dryRun: true}) == OK) {
+        if(harvesters.length < 5) {
             spawnCreep('harvester');
-        } else if(builders.length < 5) {
+        } else if(builders.length < 3) {
             spawnCreep('builder');
         } else if(upgraders.length < 5) {
             spawnCreep('upgrader');
         } else {
-            spawnCreep('upgrader');
+            spawnCreep('builder');
         }
     }
 
