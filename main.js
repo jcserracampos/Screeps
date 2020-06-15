@@ -30,7 +30,7 @@ module.exports.loop = function () {
             spawnCreep('upgrader');
         } 
         else {
-            spawnCreep('upgrader');
+            spawnCreep('outerHarvester');
         }
     }
 
