@@ -4,7 +4,7 @@ var roleAttacker = {
     run: function(creep) {
         var closestHostile = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
         if(closestHostile) {
-            tower.attack(closestHostile);
+            creep.attack(closestHostile);
         }
     }
 }
