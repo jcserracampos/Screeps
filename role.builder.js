@@ -33,24 +33,15 @@ var roleBuilder = {
                     }
                 }
             }
-        }
-        else {
+        } else {
             var sources = creep.room.find(FIND_SOURCES);
-            // var secondSource = new RoomPosition(34, 12, creep.room.name);
-            // var location = creep.room.lookAt(secondSource)
-            // haveCreep = location.filter(lookObject => {
-            //     lookObject.type == LOOK_CREEPS
-            // })
 
-            // if (haveCreep && creep.pos != secondSource) {
-            //     if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-            //         creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-            //     }
-            // } else {
-                if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            for (let index = 0; index < sources.length; index++) {
+                if(creep.harvest(sources[index]) == ERR_NOT_IN_RANGE && sources[index].energy > 0) {
+                    continue;
                 }
-            // }
+                creep.moveTo(sources[index], {visualizePathStyle: {stroke: '#ffaa00'}});
+            }
         }
     }
 };
