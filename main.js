@@ -4,9 +4,11 @@ var roleAttacker = require('role.attacker');
 var roleBuilder = require('role.builder');
 var roleHarvester = require('role.harvester');
 var roleOuterHarvester = require('role.outerHarvester');
+var roleStorageDrainer = require('role.storageDrainer');
 var roleUpgrader = require('role.upgrader');
 
-var spawnCreep = require('spawnCreep');
+var spawnCreep = require('function.spawnCreep');
+var drySpawnCreep = require('function.drySpawnCreep');
 
 module.exports.loop = function () {
 
@@ -20,17 +22,20 @@ module.exports.loop = function () {
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
+    var outerHarvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'outerHarvester');
+    var storageDrainers = _.filter(Game.creeps, (creep) => creep.memory.role == 'storageDrainer');
 
-    if(spawnCreep('X', true)) {
+    if(drySpawnCreep()) {
         if(harvesters.length < 5) {
             spawnCreep('harvester');
         } else if(builders.length < 3) {
             spawnCreep('builder');
         } else if(upgraders.length < 5) {
             spawnCreep('upgrader');
-        } 
-        else {
+        } else if(outerHarvesters.length < 1) {
             spawnCreep('outerHarvester');
+        } else if(storageDrainers.length < 1) {
+            spawnCreep('storageDrainer');
         }
     }
 
@@ -75,6 +80,9 @@ module.exports.loop = function () {
                 break;
             case 'outerHarvester':
                 roleOuterHarvester.run(creep);
+                break;
+            case 'storageDrainer':
+                roleStorageDrainer.run(creep);
                 break;
             default:
                 roleHarvester.run(creep);
