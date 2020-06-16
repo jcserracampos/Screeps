@@ -17,17 +17,19 @@ var roleOuterHarvester = {
             }
         } else {
             creep.moveTo(new RoomPosition(17, 1, GAME_ROOM));
-            var targets = creep.pos.findClosestByRange (FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == 
-                        STRUCTURE_CONTAINER && structure.energy < structure.energyCapacity);
-                }
-            });
-
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == 
-                    ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            if (creep.room.name == GAME_ROOM) {
+                var targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (
+                            structure.structureType == STRUCTURE_STORAGE && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0);
+                    }
+                });
+    
+                if(targets.length > 0) {
+                    if(creep.transfer(targets[0], RESOURCE_ENERGY) == 
+                        ERR_NOT_IN_RANGE) {
+                        creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                    }
                 }
             }
         }
